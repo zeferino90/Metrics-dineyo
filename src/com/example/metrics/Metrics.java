@@ -1,16 +1,37 @@
 package com.example.metrics;
 
-import android.support.v7.app.ActionBarActivity;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.RestAdapter;
+import retrofit.http.GET;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class Metrics extends ActionBarActivity {
+import com.example.adapters.JsonAdapter;
+import com.example.extraclasses.Datos;
 
+
+public class Metrics extends ListActivity {
+
+	private JsonAdapter adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_metrics);
+		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://dineyo.com").build();
+		JsonMetrics metrics = restAdapter.create(JsonMetrics.class);
+		//List<Datos> metricas = metrics.listMetrics();
+		List<Datos> metricas = new ArrayList<Datos>();
+		adapter = new JsonAdapter(this, R.layout.item_metric, metricas);
+		setListAdapter(adapter);
+	}
+	
+	private interface JsonMetrics{
+		@GET("/api/metrics")
+		List<Datos> listMetrics();
 	}
 
 	@Override
