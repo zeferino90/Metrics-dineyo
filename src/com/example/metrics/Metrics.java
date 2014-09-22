@@ -3,10 +3,14 @@ package com.example.metrics;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import retrofit.http.GET;
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,21 +21,35 @@ import com.example.extraclasses.Datos;
 public class Metrics extends ListActivity {
 
 	private JsonAdapter adapter;
-	
+	private List<Datos> metricas;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://dineyo.com").build();
 		JsonMetrics metrics = restAdapter.create(JsonMetrics.class);
-		//List<Datos> metricas = metrics.listMetrics();
-		List<Datos> metricas = new ArrayList<Datos>();
-		adapter = new JsonAdapter(this, R.layout.item_metric, metricas);
-		setListAdapter(adapter);
+		 
+		metrics.listMetrics(new Callback(){
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				Log.e("Retrofit error", arg0.toString());
+			}
+
+			@Override
+			public void success(Object arg0, Response arg1) {
+				// TODO Auto-generated method stub
+				metricas = (List<Datos>) arg0;
+				adapter = new JsonAdapter(getBaseContext(), R.layout.item_metric, metricas);
+				setListAdapter(adapter);
+			}
+			
+		});
 	}
 	
 	private interface JsonMetrics{
 		@GET("/api/metrics")
-		List<Datos> listMetrics();
+		List<Datos> listMetrics(Callback callback);
 	}
 
 	@Override
