@@ -1,8 +1,5 @@
 package com.example.metrics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -15,20 +12,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.adapters.JsonAdapter;
-import com.example.extraclasses.Datos;
+import com.example.extraclasses.ListaDatos;
 
 
 public class Metrics extends ListActivity {
 
 	private JsonAdapter adapter;
-	private List<Datos> metricas;
+	private ListaDatos metricas;
+	
+	private interface JsonMetrics{
+		@GET("/api/metrics")
+		void listMetrics(Callback<ListaDatos> callback);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://dineyo.com").build();
 		JsonMetrics metrics = restAdapter.create(JsonMetrics.class);
 		 
-		metrics.listMetrics(new Callback(){
+		metrics.listMetrics(new Callback<ListaDatos>(){
 
 			@Override
 			public void failure(RetrofitError arg0) {
@@ -37,21 +40,16 @@ public class Metrics extends ListActivity {
 			}
 
 			@Override
-			public void success(Object arg0, Response arg1) {
+			public void success(ListaDatos arg0, Response arg1) {
 				// TODO Auto-generated method stub
-				metricas = (List<Datos>) arg0;
-				adapter = new JsonAdapter(getBaseContext(), R.layout.item_metric, metricas);
+				metricas = arg0;
+				adapter = new JsonAdapter(getBaseContext(), R.layout.item_metric, metricas.getDatos());
 				setListAdapter(adapter);
 			}
 			
 		});
 	}
 	
-	private interface JsonMetrics{
-		@GET("/api/metrics")
-		List<Datos> listMetrics(Callback callback);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
