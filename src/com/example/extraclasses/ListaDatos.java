@@ -3,8 +3,10 @@ package com.example.extraclasses;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ListaDatos {
-	private List<Datos> datos;
+	@SerializedName("metrics")private List<Datos> datos;
 
 	public ListaDatos(){
 		datos = new ArrayList<Datos>();

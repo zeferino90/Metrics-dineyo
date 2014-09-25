@@ -1,22 +1,22 @@
 package com.example.extraclasses;
 
 public class Datos {
-	private String clave;
-	private String valor;
+	private String key;
+	private String value;
 	
 	public Datos(){}
 	
-	public String getClave() {
-		return clave;
+	public String getKey() {
+		return key;
 	}
-	public void setClave(String clave) {
-		this.clave = clave;
+	public void setKey(String key) {
+		this.key = key;
 	}
-	public String getValor() {
-		return valor;
+	public String getValue() {
+		return value;
 	}
-	public void setValor(String valor) {
-		this.valor = valor;
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 	

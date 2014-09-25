@@ -38,8 +38,8 @@ public class JsonAdapter extends ArrayAdapter<Datos>  {
         	TextView clave = (TextView)convertView.findViewById(com.example.metrics.R.id.clave);
         	TextView valor = (TextView)convertView.findViewById(com.example.metrics.R.id.valor);
         	valor.setTextColor(Color.GRAY);
-        	clave.setText(item.getClave());
-        	valor.setText(item.getValor());
+        	clave.setText(item.getKey());
+        	valor.setText(item.getValue());
         }
         return convertView;
 	}

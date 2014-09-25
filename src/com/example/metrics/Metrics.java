@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.adapters.JsonAdapter;
 import com.example.extraclasses.ListaDatos;
@@ -63,8 +64,27 @@ public class Metrics extends ListActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.refresh) {
+			RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://dineyo.com").build();
+			JsonMetrics metrics = restAdapter.create(JsonMetrics.class);
+			metrics.listMetrics(new Callback<ListaDatos>(){
+
+				@Override
+				public void failure(RetrofitError arg0) {
+					// TODO Auto-generated method stub
+					Log.e("Retrofit error", arg0.toString());
+				}
+
+				@Override
+				public void success(ListaDatos arg0, Response arg1) {
+					// TODO Auto-generated method stub
+					metricas = arg0;
+					adapter = new JsonAdapter(getBaseContext(), R.layout.item_metric, metricas.getDatos());
+					setListAdapter(adapter);
+				}
+				
+			});
+			Toast.makeText(getApplicationContext(), "Refreshing values", Toast.LENGTH_SHORT).show();
 		}
 		return super.onOptionsItemSelected(item);
 	}
